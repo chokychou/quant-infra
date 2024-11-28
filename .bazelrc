@@ -1,0 +1,2 @@
+common --show_timestamps
+build -c opt --cxxopt=-std=gnu++20 --host_cxxopt=-std=gnu++20
