@@ -1,5 +1,3 @@
-# https://github.com/aspect-build/bazel-examples.git
-
 "Wrapper macro to make three separate layers for python applications"
 
 load("@aspect_bazel_lib//lib:tar.bzl", "mtree_spec", "tar")

@@ -1,6 +1,6 @@
 load("@aspect_bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
 load("@rules_oci//oci:defs.bzl", "oci_load")
-load("//third_party:py_layer.bzl", "py_oci_image")
+load("//third_party/py_layer:py_layer.bzl", "py_oci_image")
 
 platform(
     name = "aarch64_linux",
