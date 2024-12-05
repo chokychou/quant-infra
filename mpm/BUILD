@@ -40,7 +40,7 @@ platform_transition_filegroup(
 
 # To build the image and load it into it into a local runtime:
 # $ bazel run //src:service_image_load
-# $ docker run --rm gcr.io/oci_python_hello_world:latest
+# $ docker run --rm service:latest
 oci_load(
     name = "service_image_load",
     image = ":platform_image",

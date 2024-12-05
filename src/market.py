@@ -4,19 +4,29 @@ from enum import Enum
 
 @dataclass
 class Instrument:
+
+    @dataclass
+    class InstrumentType(Enum):
+        STOCK = 1
+        CALL_OPTION = 2
+        PUT_OPTION = 2
+
     cusip: str | None = None
     symbol: str | None = None
     instrument_id: str | None = None
+    instrument_type: InstrumentType | None = None
 
 
 class Order:
 
     @dataclass
     class Options:
-        long_quantity: int = 0
+        buy_quantity: int = 0
+        sell_quantity: int = 0
+        orderId: int = 0
 
-    instrument: Instrument | None = None
-    options: Options | None = None
+    instrument: list[Instrument] | None = None
+    options: list[Options] | None = None
 
     def PlaceOrder(self) -> None:
         NotImplemented
@@ -25,6 +35,9 @@ class Order:
         NotImplemented
 
     def ReplaceOrder(self) -> None:
+        NotImplemented
+
+    def CancelAllPendingOrders(self) -> None:
         NotImplemented
 
 
@@ -68,7 +81,9 @@ class Option:
         UNKNOWN = 100
 
     def IsPutOption(self, instrument: Instrument) -> bool:
-        NotImplemented
+        if instrument is None:
+            return False
+        return instrument.instrument_type == Instrument.InstrumentType.PUT_OPTION
 
     def CalculatePutOptionState(
         self, position: Position, market: Market, tolerance=0
