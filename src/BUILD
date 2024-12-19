@@ -1,9 +1,31 @@
 load("@rules_python//python:defs.bzl", "py_binary", "py_test")
+load("@pip//:requirements.bzl", "requirement")
+
+py_library(
+    name = "auth",
+    srcs = ["auth.py"],
+    deps = [
+        requirement("schwabdev"),
+    ],
+)
+
+py_library(
+    name = "market",
+    srcs = ["market.py"],
+)
 
 py_library(
     name = "strategy",
     srcs = ["strategy.py"],
     deps = [":market"],
+)
+
+py_test(
+    name = "market_test",
+    srcs = ["market_test.py"],
+    deps = [
+        ":market",
+    ],
 )
 
 py_test(
@@ -15,19 +37,7 @@ py_test(
     ],
 )
 
-py_library(
-    name = "market",
-    srcs = ["market.py"],
-)
-
-py_test(
-    name = "market_test",
-    srcs = ["market_test.py"],
-    deps = [
-        ":market",
-    ],
-)
-
+# TODO: Implement service_binary
 py_binary(
     name = "service_binary",
     srcs = ["service.py"],
