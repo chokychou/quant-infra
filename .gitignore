@@ -189,3 +189,7 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/bazel,python
+
+# test data
+test/data/**/*.feather
+.DS_Store

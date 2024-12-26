@@ -9,13 +9,19 @@ manifest:
     cffi: cffi
     charset_normalizer: charset_normalizer
     cryptography: cryptography
+    dateutil: python_dateutil
     idna: idna
+    numpy: numpy
+    pandas: pandas
+    pyarrow: pyarrow
     pycparser: pycparser
+    pytz: pytz
     requests: requests
     schwabdev: schwabdev
+    six: six
     tzdata: tzdata
     urllib3: urllib3
     websockets: websockets
   pip_repository:
     name: pip
-integrity: 5286cb42b315ef702dbd5a9e4f64d9ae7cdf0487cfb3dde1ced7a531416999e8
+integrity: dd35d599a61a11a73cb13c609811a009c610f75fd971756dc8a278e58b73a355

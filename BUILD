@@ -1,7 +1,5 @@
 # Add dependencies to requirements.in, and run:
-# - bazel run //:requirements.update
-# - bazel run //:gazelle_python_manifest.update
-# - bazel run //:gazelle
+# bazel run //:requirements.update && bazel run //:gazelle_python_manifest.update && bazel run //:gazelle
 
 load("@bazel_gazelle//:def.bzl", "gazelle")
 load("@pip//:requirements.bzl", "all_whl_requirements")

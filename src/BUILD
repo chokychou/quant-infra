@@ -4,12 +4,12 @@ py_binary(
     name = "service",
     srcs = ["service.py"],
     visibility = ["//:__subpackages__"],
+    deps = ["@pip//schwabdev"],
 )
 
 py_library(
     name = "src",
     srcs = [
-        "auth.py",
         "market.py",
         "service.py",
         "strategy.py",
