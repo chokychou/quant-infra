@@ -41,5 +41,8 @@ py_test(
 py_test(
     name = "strategy_test",
     srcs = ["strategy_test.py"],
-    deps = [":src"],
+    deps = [
+        ":asset_py_proto",
+        ":src",
+    ],
 )
