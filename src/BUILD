@@ -1,4 +1,16 @@
+# gazelle:resolve py src.asset_pb2 :asset_py_proto
+load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+
+proto_library(
+    name = "asset_proto",
+    srcs = ["asset.proto"],
+)
+
+py_proto_library(
+    name = "asset_py_proto",
+    deps = [":asset_proto"],
+)
 
 py_binary(
     name = "service",
@@ -15,13 +27,15 @@ py_library(
         "strategy.py",
     ],
     visibility = ["//:__subpackages__"],
-    deps = ["@pip//schwabdev"],
+    deps = [
+        ":asset_py_proto",
+        "@pip//schwabdev",
+    ],
 )
 
 py_test(
     name = "market_test",
     srcs = ["market_test.py"],
-    deps = [":src"],
 )
 
 py_test(

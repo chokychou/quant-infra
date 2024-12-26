@@ -1,6 +1,8 @@
+import src.asset_pb2 as asset_pb2
+
 from abc import ABC
 from dataclasses import dataclass
-from src.market import Order, Position, Market, Option, Instrument
+from src.market import Order
 
 
 class Strategy(ABC):
@@ -11,61 +13,48 @@ class Strategy(ABC):
 
 class HedgeRolling(Strategy):
 
-    option = Option()
+    def HasSatisfiedCondition(
+        self,
+        option: asset_pb2.Options,
+        market: asset_pb2.Equity,
+        tolerance: float = 0.0,
+    ) -> bool:
+        # Equivalent to: (p - m*t) - m
+        diff = market.market_price - option.strike_price * (1 + tolerance)
+        return abs(diff) > 0
 
     @staticmethod
-    def _IsOkToHedgeDown(position: Position, market: Market) -> bool:
-        """Fine tune"""
-        return True
+    def CreateOrder(option: asset_pb2.Options) -> Order:
+        """Build bear put spread if bullish and bull put spread if bearish.
 
-    @staticmethod
-    def _IsOkToTradeUp(position: Position, market: Market) -> bool:
-        """Fine tune"""
+        Args:
+            position: of the put position.
+            market: of the stock at market value.
+        """
         NotImplemented
 
-    def HasSatisfiedCondition(self, position: Position, market: Market) -> bool:
-        option = self.option
-        if not option.IsPutOption(position.instrument):
-            return False
-        match option.CalculatePutOptionState(position, market):
-            case option.OptionState.ATM:
-                return False
-            case option.OptionState.ITM:
-                return True if self._IsOkToHedgeDown(position, market) else False
-            case option.OptionState.OTM:
-                return True if self._IsOkToTradeUp(position, market) else False
-            case option.OptionState.UNKNOWN:
-                return False
-            case _:
-                raise Exception("HedgeRolling encounters an unexpected option state.")
+    def Run(self, portfolio: asset_pb2.Portfolio) -> None:
+        """Main function
 
-    @staticmethod
-    def CreateOrder(position: Position, market: Market) -> Order:
-        """stack same quantities to the next OTM, create a vertical roll
+        If the position is a put option, create an order to hedge.
+
         Args:
-            position: of the put position.
+            portfolio: account portfolio.
             market: of the stock at market value.
         """
-        order = Order()
-        # sell to close
-        order.instrument.append(position)
-        order.options.append(Order.Options(sell_quantity=position.number.long_quantity))
-        # buy to open
-        order.instrument.append(market.nextOtmInstrument)
-        order.options.append(Order.Options(buy_quantity=position.number.long_quantity))
+        for position in portfolio.positions:
+            if not position.options:
+                return
+            options = position.options
+            if options.option_type != asset_pb2.Options.OptionType.PUT:
+                return
+            ref_equity = LookupEquity(options)
 
-        return order
+            # Step 1: create an order
+            if not self.HasSatisfiedCondition(options, ref_equity):
+                return
+            order = self.CreateOrder(options)
 
-    def Run(self, position: Position, market: Market) -> None:
-        """
-        Args:
-            position: of the put position.
-            market: of the stock at market value.
-        """
-        # Step 1: create an order
-        if not self.HasSatisfiedCondition(position, market):
-            return
-        order = self.CreateOrder(position, market)
-        # step 2: if there is an existing open order before, cancel that and replace with the new one
-        order.CancelAllPendingOrders()
-        order.PlaceOrder()
+            # step 2: if there is an existing open order before, cancel that and replace with the new one
+            order.CancelAllPendingOrders()
+            order.PlaceOrder()

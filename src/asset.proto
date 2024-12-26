@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package asset;
+
+// Asset
+message Instrument {
+    string symbol = 1;
+    oneof asset {
+        Equity equity = 2;
+        Options options = 3;
+    }
+}
+
+message Equity {
+    string ticker = 1;
+    int32 market_price = 2;
+}
+
+message Options {
+    enum OptionType {
+        UNKNOWN = 0;
+        CALL = 1;
+        PUT = 2;
+    }
+    OptionType option_type = 1;
+    int32 strike_price = 2;
+    int32 expiration_date = 3;
+    int32 market_price = 4;
+}
+
+message Portfolio {
+    message Position {
+        Instrument instruments = 1;
+        int32 quantity = 2;
+    }
+    repeated Position positions = 1;
+}
+
+// Asset operation
+message Order {
+    message Options {
+        oneof order_quantity {
+            int32 buy = 1;
+            int32 sell = 2;
+        }
+    }
+    repeated Instrument instruments = 1;
+    int32 order_id = 2;
+    Options options = 3;
+}

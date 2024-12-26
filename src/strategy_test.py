@@ -1,44 +1,24 @@
 import unittest
+import src.asset_pb2 as asset_pb2
 
-from src.market import Option, Instrument, Position, Market
 from src.strategy import HedgeRolling
 
 
 class HedgeRollingTest(unittest.TestCase):
-    
-    def test_PutOptionDoesNotSatisfyCondition(self):
-        strat = HedgeRolling()
-        self.assertFalse(strat.HasSatisfiedCondition(Position(), Market()))
 
-    def test_SatisfyConditionReturnFalse(self):
-        instrument = Instrument(
-            instrument_type=Instrument.InstrumentType.PUT_OPTION
+    def test_AtTheMoneyDoesNotSatisfyCondition(self):
+        option = asset_pb2.Options(
+            strike_price=100,
         )
-        position = Position(
-            instrument=instrument,
-            number=Position.Number(strike_price=100)
-        )
-        market = Market(
-            instrument= instrument,
-            number=Market.Number(market_value=100)
-        )
-        strat = HedgeRolling()
-        self.assertFalse(strat.HasSatisfiedCondition(position, market))
+        equity = asset_pb2.Equity(market_price=100)
+        self.assertFalse(HedgeRolling().HasSatisfiedCondition(option, equity))
 
     def test_SatisfyConditionReturnTrue(self):
-        instrument = Instrument(
-            instrument_type=Instrument.InstrumentType.PUT_OPTION
+        option = asset_pb2.Options(
+            strike_price=100,
         )
-        position = Position(
-            instrument=instrument,
-            number=Position.Number(strike_price=100)
-        )
-        market = Market(
-            instrument= instrument,
-            number=Market.Number(market_value=95),
-        )
-        strat = HedgeRolling()
-        self.assertTrue(strat.HasSatisfiedCondition(position, market))
+        equity = asset_pb2.Equity(market_price=90)
+        self.assertTrue(HedgeRolling().HasSatisfiedCondition(option, equity))
 
     def test_OkToHedgeDownAndCreateOrder(self):
         NotImplemented

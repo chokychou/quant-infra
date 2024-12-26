@@ -8,6 +8,8 @@ This codebase is simply an initialization of a dumb thought, which just magicall
 ##########################
 
 bazel_dep(name = "gazelle", version = "0.30.0", repo_name = "bazel_gazelle")
+bazel_dep(name = "grpc", version = "1.69.0")
+bazel_dep(name = "protobuf", version = "29.2")
 bazel_dep(name = "rules_oci", version = "2.0.1")
 
 ##########################

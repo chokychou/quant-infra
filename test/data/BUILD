@@ -13,6 +13,5 @@ py_test(
     deps = [
         "@pip//numpy",
         "@pip//pandas",
-        "@pip//pyarrow",
     ],
 )
