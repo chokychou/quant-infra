@@ -2,6 +2,8 @@
 load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
+package(default_visibility = ["//visibility:public"])
+
 proto_library(
     name = "asset_proto",
     srcs = ["asset.proto"],

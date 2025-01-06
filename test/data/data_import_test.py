@@ -47,6 +47,7 @@ std                    NaN     357.359912  ...   1474.601169         0.0
 
 import numpy as np 
 import pandas as pd
+import pyarrow as pa
 import os
 import unittest
 
