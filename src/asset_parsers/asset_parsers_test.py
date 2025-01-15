@@ -9,7 +9,9 @@ class DataImportTest(unittest.TestCase):
     data_files = load_test_data()
 
     def test_backtest_to_asset_parser(self):
-        NotImplemented
+        for name, df in self.data_files.items():
+            print(df.order_book_id)
+        assert False
 
 
 if __name__ == "__main__":
